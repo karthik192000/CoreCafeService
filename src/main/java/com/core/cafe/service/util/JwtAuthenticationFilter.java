@@ -30,19 +30,18 @@ import java.util.List;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private static final List<String> SKIP_AUTH_URIS = Arrays.asList(new String[]{"/*.html", "/**/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js", "/**/*.xlsx", "/v1/authenticate", "/v2/api-docs", "/configuration/ui", "/swagger-resources/**", "/swagger-ui/**", "/configuration/security", "/webjars/**", "/health", "/loggers", "/loggers/Service_Application", "/info", "/auditevents", "/metrics", "/beans", "/caches", "/conditions", "/configprops", "/env", "/flyway", "/httptrace", "/integrationgraph", "/liquibase", "/mappings", "/scheduledtasks", "/sessions", "/shutdown", "/threaddump", "/heapdump", "/prometheus", "/logfile", "/jolokia", "/metrics/**", "/loggers/**", "/v3/api-docs/**", "/error"});
 
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
 
         try {
-            if(SKIP_AUTH_URIS.contains(httpServletRequest.getRequestURI())){
+            if(!httpServletRequest.getRequestURI().startsWith("/cafeservice")){
                 return;
             }
             String authtoken = httpServletRequest.getHeader("authtoken");
 
-            if(!StringUtils.isEmpty(authtoken)){
+            if(StringUtils.isEmpty(authtoken)){
                 throw new CafeServiceException("You are not authorized",HttpStatus.UNAUTHORIZED);
             }
                 HttpRequest validateTokenRequest = HttpRequest.newBuilder()
