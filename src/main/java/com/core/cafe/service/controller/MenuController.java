@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +29,7 @@ public class MenuController {
     @ApiResponses({
             @ApiResponse(code = 200,message="Fetched Menu Details Successfully",response = MenuDetails.class)
     })
+    @Secured(value = {"ROLE_CUSTOMER","ROLE_EMPLOYEE","ROLE_ADMIN"})
     @GetMapping(path = "/menu",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getMenu(){
         List<MenuDetails> menuDetails = menuService.getMenu();
@@ -38,6 +41,7 @@ public class MenuController {
     @ApiResponses({
             @ApiResponse(code = 201,message="Added Item(s) to menu successfully",response = MenuDetails.class)
     })
+    @Secured(value = {"ROLE_ADMIN"})
     @PostMapping(path = "/menu",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addToMenu(@RequestBody List<MenuDetails> menuDetails){
         List<MenuDetails> menuDetailsList = menuService.addToMenu(menuDetails);
@@ -49,6 +53,7 @@ public class MenuController {
             @ApiResponse(code = 201,message="Updated item(s) in the menu successfully",response = MenuDetails.class),
             @ApiResponse(code = 404,message = "Item(s) not found for provided item keys(s)")
     })
+    @Secured(value = {"ROLE_ADMIN"})
     @PutMapping(path = "/menu",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateMenu(@RequestBody List<MenuDetails> menuDetails){
         List<MenuDetails> menuDetailsList = menuService.updateMenu(menuDetails);
@@ -60,6 +65,7 @@ public class MenuController {
     @ApiResponses({
             @ApiResponse(code = 204,message = "Item(s) delete from menu successfully.")
     })
+    @Secured(value = {"ROLE_ADMIN"})
     @DeleteMapping(path = "/menu")
     public ResponseEntity<?> removeFromMenu(@RequestParam(value = "itemkeys") List<Integer> itemKeys){
         menuService.removeFromMenu(itemKeys);
