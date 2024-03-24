@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class MenuController {
+@RequestMapping(path = "/cafeservice")
+public class CafeServiceController {
 
 
     @Autowired
