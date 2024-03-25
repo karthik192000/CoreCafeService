@@ -31,6 +31,7 @@ public class CafeServiceController {
             @ApiResponse(code = 200,message="Fetched Menu Details Successfully",response = MenuDetails.class)
     })
     @Secured(value = {"ROLE_CUSTOMER","ROLE_EMPLOYEE","ROLE_ADMIN"})
+    @CrossOrigin
     @GetMapping(path = "/menu",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getMenu(){
         List<MenuDetails> menuDetails = menuService.getMenu();

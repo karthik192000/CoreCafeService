@@ -40,7 +40,7 @@ public class CafeSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .cors().disable()
+                .cors().and()
                 .authorizeRequests()
                 .antMatchers(SKIP_AUTH_URIS).permitAll()
                 .anyRequest().authenticated()
