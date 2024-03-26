@@ -14,5 +14,5 @@ public interface MenuService {
 
     public List<MenuDetails> updateMenu(List<MenuDetails> menuDetails);
 
-    public void removeFromMenu(List<Integer> itemKeys);
+    public void removeFromMenu(Integer itemKeys);
 }

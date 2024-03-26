@@ -69,8 +69,9 @@ public class CafeServiceController {
     })
     @Secured(value = {"ROLE_ADMIN"})
     @DeleteMapping(path = "/menu")
-    public ResponseEntity<?> removeFromMenu(@RequestParam(value = "itemkeys") List<Integer> itemKeys){
-        menuService.removeFromMenu(itemKeys);
+    @CrossOrigin
+    public ResponseEntity<?> removeFromMenu(@RequestParam(value = "itemkey") Integer itemKey){
+        menuService.removeFromMenu(itemKey);
         return new ResponseEntity<>("",HttpStatus.NO_CONTENT);
     }
 }

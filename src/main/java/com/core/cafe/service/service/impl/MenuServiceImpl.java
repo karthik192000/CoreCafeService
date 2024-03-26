@@ -77,12 +77,11 @@ public class MenuServiceImpl implements MenuService {
 
 
     @Override
-    public void removeFromMenu(List<Integer> itemKeys) {
-        if(!CollectionUtils.isEmpty(itemKeys)){
-//            List<Menu> itemsTobeRemoved = ModelDto.toModel(menuDetails);
-           List<Menu> menuList =  menuRepository.findAllById(itemKeys);
-           if(!CollectionUtils.isEmpty(menuList)){
-               menuRepository.deleteAll(menuList);
+    public void removeFromMenu(Integer itemKey) {
+        if(itemKey != null){
+           Menu menu = menuRepository.findByItemkey(itemKey);
+           if(menu != null){
+               menuRepository.delete(menu);
            }
         }
     }
