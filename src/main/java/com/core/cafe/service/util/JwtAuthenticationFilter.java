@@ -37,6 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             if(!httpServletRequest.getRequestURI().startsWith("/cafeservice")){
+                filterChain.doFilter(httpServletRequest,httpServletResponse);
                 return;
             }
             String authtoken = httpServletRequest.getHeader("authtoken");

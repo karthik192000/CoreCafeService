@@ -1,6 +1,7 @@
 package com.core.cafe.service.model;
 
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,6 +27,7 @@ public class Menu {
 
     private String itemcategory;
 
+    @Column(name = "vegnonveg")
     private String vegornonveg;
 
 
