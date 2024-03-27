@@ -43,7 +43,7 @@ public class CafeServiceController {
     @ApiResponses({
             @ApiResponse(code = 201,message="Added Item(s) to menu successfully",response = MenuDetails.class)
     })
-    @Secured(value = {"ROLE_ADMIN"})
+    @Secured(value = {"ROLE_ADMIN","ROLE_EMPLOYEE"})
     @CrossOrigin
     @PostMapping(path = "/menu",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addToMenu(@RequestBody List<MenuDetails> menuDetails){
@@ -56,7 +56,7 @@ public class CafeServiceController {
             @ApiResponse(code = 201,message="Updated item(s) in the menu successfully",response = MenuDetails.class),
             @ApiResponse(code = 404,message = "Item(s) not found for provided item keys(s)")
     })
-    @Secured(value = {"ROLE_ADMIN"})
+    @Secured(value = {"ROLE_ADMIN","ROLE_EMPLOYEE"})
     @CrossOrigin
     @PutMapping(path = "/menu",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateMenu(@RequestBody List<MenuDetails> menuDetails){
@@ -69,7 +69,7 @@ public class CafeServiceController {
     @ApiResponses({
             @ApiResponse(code = 204,message = "Item(s) delete from menu successfully.")
     })
-    @Secured(value = {"ROLE_ADMIN"})
+    @Secured(value = {"ROLE_ADMIN","ROLE_EMPLOYEE"})
     @DeleteMapping(path = "/menu")
     @CrossOrigin
     public ResponseEntity<?> removeFromMenu(@RequestParam(value = "itemkey") Integer itemKey){
