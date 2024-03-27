@@ -31,7 +31,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuDetails> getMenu() {
-        List<Menu> menuList = menuRepository.findAll();
+        List<Menu> menuList = menuRepository.findAllOrderByItemkey();
         List<MenuDetails> menuDetails = ModelDto.toDto(menuList);
         return menuDetails;
     }

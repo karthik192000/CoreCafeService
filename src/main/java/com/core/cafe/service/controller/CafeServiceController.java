@@ -44,6 +44,7 @@ public class CafeServiceController {
             @ApiResponse(code = 201,message="Added Item(s) to menu successfully",response = MenuDetails.class)
     })
     @Secured(value = {"ROLE_ADMIN"})
+    @CrossOrigin
     @PostMapping(path = "/menu",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addToMenu(@RequestBody List<MenuDetails> menuDetails){
         List<MenuDetails> menuDetailsList = menuService.addToMenu(menuDetails);
@@ -56,6 +57,7 @@ public class CafeServiceController {
             @ApiResponse(code = 404,message = "Item(s) not found for provided item keys(s)")
     })
     @Secured(value = {"ROLE_ADMIN"})
+    @CrossOrigin
     @PutMapping(path = "/menu",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateMenu(@RequestBody List<MenuDetails> menuDetails){
         List<MenuDetails> menuDetailsList = menuService.updateMenu(menuDetails);
