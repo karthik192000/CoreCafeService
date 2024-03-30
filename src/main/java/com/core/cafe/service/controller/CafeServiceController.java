@@ -3,7 +3,10 @@ package com.core.cafe.service.controller;
 
 import com.core.cafe.service.beans.MenuDetails;
 import com.core.cafe.service.beans.MenuRequest;
+import com.core.cafe.service.model.Order;
 import com.core.cafe.service.service.MenuService;
+import com.core.cafe.service.service.OrderService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -24,6 +27,9 @@ public class CafeServiceController {
 
     @Autowired
     MenuService menuService;
+
+    @Autowired
+    OrderService orderService;
 
 
     @ApiOperation(value = "Get All menu Details", notes = "Get All menu Details", httpMethod = "GET")
@@ -75,5 +81,32 @@ public class CafeServiceController {
     public ResponseEntity<?> removeFromMenu(@RequestParam(value = "itemkey") Integer itemKey){
         menuService.removeFromMenu(itemKey);
         return new ResponseEntity<>("",HttpStatus.NO_CONTENT);
+    }
+
+
+
+    @ApiOperation(value = "Place order from the menu", notes = "Place order from the menu",httpMethod = "POST")
+    @ApiResponses({
+            @ApiResponse(code = 201,message = "Order placed successfully.",response = Order.class)
+    })
+    @Secured(value = {"ROLE_CUSTOMER"})
+    @PostMapping(path = "/order")
+    @CrossOrigin
+    public ResponseEntity<?> placeOrder(@RequestBody Order order){
+        Order placedOrder = orderService.saveOrder(order);
+        return new ResponseEntity<>(placedOrder,HttpStatus.CREATED);
+    }
+
+
+    @ApiOperation(value = "Update order Status", notes = "Update Order Status",httpMethod = "PUT")
+    @ApiResponses({
+            @ApiResponse(code = 201,message = "Updated Order Status Successfully",response = Order.class)
+    })
+    @Secured(value = {"ROLE_CUSTOMER","ROLE_EMPLOYEE"})
+    @PutMapping(path = "/order/{orderId}")
+    @CrossOrigin
+    public ResponseEntity<?> updateOrderStatus(@PathVariable(value = "orderId") String orderId, @RequestParam(value = "orderStatus",required = true) String orderStatus){
+       Order updatedOrder =  orderService.updateOrderStatus(orderId,orderStatus);
+       return new ResponseEntity<>(updatedOrder,HttpStatus.CREATED);
     }
 }
