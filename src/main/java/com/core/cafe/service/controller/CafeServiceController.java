@@ -10,6 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.models.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -108,5 +109,18 @@ public class CafeServiceController {
     public ResponseEntity<?> updateOrderStatus(@PathVariable(value = "orderId") String orderId, @RequestParam(value = "orderStatus",required = true) String orderStatus){
        Order updatedOrder =  orderService.updateOrderStatus(orderId,orderStatus);
        return new ResponseEntity<>(updatedOrder,HttpStatus.CREATED);
+    }
+
+
+    @ApiOperation(value = "Fetched orders Successfully", notes = "Fetched orders Successfully",httpMethod = "GET")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "Fetched Orders Successfully",response = Order.class)
+    })
+    @Secured(value = {"ROLE_CUSTOMER","ROLE_EMPLOYEE"})
+    @GetMapping(path = "/order")
+    @CrossOrigin
+    public ResponseEntity<?> getOrders(){
+        List<Order> orders = orderService.getOrders();
+        return new ResponseEntity<>(orders,HttpStatus.OK);
     }
 }

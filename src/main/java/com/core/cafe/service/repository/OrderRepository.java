@@ -8,6 +8,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Repository
 public class OrderRepository {
 
@@ -38,6 +41,21 @@ public class OrderRepository {
             }
         }
         return updatedOrder;
+    }
+
+    public List<Order> findByCustomerId(String customerId){
+        List<Order> orders = null;
+        if(!StringUtils.isEmpty(customerId)){
+            Query query = new Query();
+            query.addCriteria(Criteria.where("customerId").is(customerId));
+            orders = mongoTemplate.find(query,Order.class,ORDER_COLLECTION);
+        }
+
+        return orders;
+    }
+
+    public List<Order> findAllOrders(){
+        return mongoTemplate.findAll(Order.class,ORDER_COLLECTION);
     }
 
 

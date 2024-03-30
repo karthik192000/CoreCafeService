@@ -10,6 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -37,5 +39,21 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order updateOrderStatus(String orderId, String orderStatus) {
         return orderRepository.updateOrderStatus(orderId,orderStatus);
+    }
+
+
+    @Override
+    public List<Order> getOrders() {
+        List<Order> orderList = new ArrayList<>();
+        String userRole = CafeServiceUtil.getUserRoleFromSecurityContext();
+        if(userRole.equals("CUSTOMER")){
+            String userName = CafeServiceUtil.getUserNameFromSecurityContext();
+           orderList =  orderRepository.findByCustomerId(userName);
+        }
+        else{
+            orderList = orderRepository.findAllOrders();
+        }
+
+        return orderList;
     }
 }
