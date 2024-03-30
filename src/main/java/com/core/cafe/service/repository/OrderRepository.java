@@ -48,6 +48,7 @@ public class OrderRepository {
         if(!StringUtils.isEmpty(customerId)){
             Query query = new Query();
             query.addCriteria(Criteria.where("customerId").is(customerId));
+            query.addCriteria(Criteria.where("orderStatus").is("INPROGRESS"));
             orders = mongoTemplate.find(query,Order.class,ORDER_COLLECTION);
         }
 
