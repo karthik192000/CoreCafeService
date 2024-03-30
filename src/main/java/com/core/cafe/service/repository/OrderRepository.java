@@ -37,6 +37,7 @@ public class OrderRepository {
             Order orderToBeUpdated = mongoTemplate.findById(orderId,Order.class,ORDER_COLLECTION);
             if(orderToBeUpdated != null){
                 orderToBeUpdated.setOrderStatus(status);
+                orderToBeUpdated.setEpoch(System.currentTimeMillis());
                 updatedOrder = saveOrder(orderToBeUpdated);
             }
         }

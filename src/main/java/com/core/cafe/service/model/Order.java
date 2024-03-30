@@ -24,6 +24,8 @@ public class Order implements Serializable {
 
     private String orderStatus;
 
+    private Long epoch;
+
     public String getOrderId() {
         return orderId;
     }
@@ -62,5 +64,13 @@ public class Order implements Serializable {
 
     public void setOrderStatus(String orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    public Long getEpoch() {
+        return epoch;
+    }
+
+    public void setEpoch(Long epoch) {
+        this.epoch = epoch;
     }
 }
