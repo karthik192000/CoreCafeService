@@ -19,7 +19,7 @@ public class MongoDBConfig {
     public MongoClient mongoClient(){
         MongoClient mongoClient = null;
         try {
-            ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017/cafe");
+            ConnectionString connectionString = new ConnectionString("mongodb://host.docker.internal:27017/cafe");
             MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
                     .applyConnectionString(connectionString)
                     .build();

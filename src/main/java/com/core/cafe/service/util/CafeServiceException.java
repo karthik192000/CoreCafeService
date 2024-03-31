@@ -16,7 +16,7 @@ public class CafeServiceException extends  RuntimeException{
 
 
     public CafeServiceException(String errorMessage,HttpStatus code){
-        super();
+        super(errorMessage);
         this.errorMessage = errorMessage;
         this.code=code;
     }

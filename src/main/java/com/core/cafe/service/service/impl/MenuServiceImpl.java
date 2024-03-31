@@ -31,8 +31,15 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuDetails> getMenu() {
-        List<Menu> menuList = menuRepository.findAllOrderByItemkey();
-        List<MenuDetails> menuDetails = ModelDto.toDto(menuList);
+        List<MenuDetails> menuDetails = null;
+
+        try {
+            List<Menu> menuList = menuRepository.findAllOrderByItemkey();
+            menuDetails = ModelDto.toDto(menuList);
+        }
+        catch (Exception ex){
+            throw new CafeServiceException("Exception occurred whilet fetching menu details",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return menuDetails;
     }
 
@@ -41,10 +48,15 @@ public class MenuServiceImpl implements MenuService {
     @Transactional
     public List<MenuDetails> addToMenu(List<MenuDetails> menuDetails) {
         List<MenuDetails> addedToMenu = null;
-        if(!CollectionUtils.isEmpty(menuDetails)){
-           List<Menu> menuList =  ModelDto.toModel(menuDetails);
-           menuList = menuRepository.saveAll(menuList);
-          addedToMenu =  ModelDto.toDto(menuList);
+        try {
+            if (!CollectionUtils.isEmpty(menuDetails)) {
+                List<Menu> menuList = ModelDto.toModel(menuDetails);
+                menuList = menuRepository.saveAll(menuList);
+                addedToMenu = ModelDto.toDto(menuList);
+            }
+        }
+        catch (Exception ex){
+            throw new CafeServiceException("Something went wrong while adding item to menu",HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return addedToMenu;
@@ -54,22 +66,26 @@ public class MenuServiceImpl implements MenuService {
     @Transactional
     public List<MenuDetails> updateMenu(List<MenuDetails> menuDetails) {
         List<MenuDetails> updatedMenuList = new ArrayList<>();
-        if(!CollectionUtils.isEmpty(menuDetails)){
-            List<Menu> updateMenuList = new ArrayList<>();
-            menuDetails.forEach(x ->
-                    {
-                        Integer itemkey  = x.getItemKey();
-                        Menu menu = menuRepository.findByItemkey(itemkey);
-                        if(menu != null){
-                            menu = ModelDto.toModel(x);
-                            updateMenuList.add(menu);
+        try {
+            if (!CollectionUtils.isEmpty(menuDetails)) {
+                List<Menu> updateMenuList = new ArrayList<>();
+                menuDetails.forEach(x ->
+                        {
+                            Integer itemkey = x.getItemKey();
+                            Menu menu = menuRepository.findByItemkey(itemkey);
+                            if (menu != null) {
+                                menu = ModelDto.toModel(x);
+                                updateMenuList.add(menu);
+                            } else {
+                                throw new CafeServiceException(environment.getProperty(CafeServiceConstants.CCSE_001), HttpStatus.NOT_FOUND);
+                            }
                         }
-                        else{
-                            throw new CafeServiceException(environment.getProperty(CafeServiceConstants.CCSE_001), HttpStatus.NOT_FOUND);
-                        }
-                    }
-            );
-            updatedMenuList  = ModelDto.toDto(menuRepository.saveAll(updateMenuList));
+                );
+                updatedMenuList = ModelDto.toDto(menuRepository.saveAll(updateMenuList));
+            }
+        }
+        catch (Exception ex){
+            throw new CafeServiceException("Exception occurred while Updating menu details",HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return updatedMenuList;
@@ -78,11 +94,16 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public void removeFromMenu(Integer itemKey) {
-        if(itemKey != null){
-           Menu menu = menuRepository.findByItemkey(itemKey);
-           if(menu != null){
-               menuRepository.delete(menu);
-           }
+        try {
+            if (itemKey != null) {
+                Menu menu = menuRepository.findByItemkey(itemKey);
+                if (menu != null) {
+                    menuRepository.delete(menu);
+                }
+            }
+        }
+        catch (Exception ex){
+            throw new CafeServiceException("Exception occured while removing item from menu",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

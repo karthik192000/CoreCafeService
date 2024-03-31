@@ -46,7 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 throw new CafeServiceException("You are not authorized",HttpStatus.UNAUTHORIZED);
             }
                 HttpRequest validateTokenRequest = HttpRequest.newBuilder()
-                        .uri(new URI("http://localhost:9090/validate"))
+                        .uri(new URI("http://cafeuserserviceapp:9090/validate"))
                         .header("authtoken", authtoken)
                         .POST(HttpRequest.BodyPublishers.ofString(""))
                         .build();
@@ -61,6 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(httpServletRequest,httpServletResponse);
         }
         catch (Exception ex){
+            System.out.println(ex.getMessage());
             SecurityContextHolder.getContext().setAuthentication((Authentication) null);
             throw new CafeServiceException("You are not authorized",HttpStatus.UNAUTHORIZED);
         }
