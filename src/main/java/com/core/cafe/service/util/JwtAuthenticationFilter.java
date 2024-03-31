@@ -7,6 +7,7 @@ import com.core.cafe.service.service.CustomUserDetailsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,6 +33,11 @@ import java.util.List;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
+
+    @Value("${token.validation.uri}")
+    private String tokenValidationUri;
+
+
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
 
@@ -46,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 throw new CafeServiceException("You are not authorized",HttpStatus.UNAUTHORIZED);
             }
                 HttpRequest validateTokenRequest = HttpRequest.newBuilder()
-                        .uri(new URI("http://cafeuserserviceapp:9090/validate"))
+                        .uri(new URI(tokenValidationUri))
                         .header("authtoken", authtoken)
                         .POST(HttpRequest.BodyPublishers.ofString(""))
                         .build();
@@ -60,10 +66,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                 filterChain.doFilter(httpServletRequest,httpServletResponse);
         }
+        catch (CafeServiceException ex){
+            System.out.println(ex.getMessage());
+            SecurityContextHolder.getContext().setAuthentication((Authentication) null);
+            throw ex;
+        }
         catch (Exception ex){
             System.out.println(ex.getMessage());
             SecurityContextHolder.getContext().setAuthentication((Authentication) null);
-            throw new CafeServiceException("You are not authorized",HttpStatus.UNAUTHORIZED);
+            throw new CafeServiceException("Exception occurred in doFilterInternal",HttpStatus.UNAUTHORIZED);
         }
     }
 
