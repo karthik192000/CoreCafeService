@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -16,6 +17,8 @@ public class OrderRepository {
 
 
     private static final String ORDER_COLLECTION = "orders";
+
+    private static final List<String> orderStatusList = Arrays.asList("COMPLETED","CANCELLED");
 
 
     @Autowired
@@ -35,7 +38,7 @@ public class OrderRepository {
         Order updatedOrder = null;
         if(!StringUtils.isEmpty(orderId) && !StringUtils.isEmpty(status)){
             Order orderToBeUpdated = mongoTemplate.findById(orderId,Order.class,ORDER_COLLECTION);
-            if(orderToBeUpdated != null){
+            if(orderToBeUpdated != null && !orderStatusList.contains(orderToBeUpdated.getOrderStatus())){
                 orderToBeUpdated.setOrderStatus(status);
                 orderToBeUpdated.setEpoch(System.currentTimeMillis());
                 updatedOrder = saveOrder(orderToBeUpdated);
