@@ -5,6 +5,7 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -14,12 +15,18 @@ public class MongoDBConfig {
 
 
 
+    @Value("${mongo.host}")
+    private String mongoHost;
+
+
+    @Value("${cafe.order.mongo.database}")
+    private String mongoDatabase;
 
     @Bean
     public MongoClient mongoClient(){
         MongoClient mongoClient = null;
         try {
-            ConnectionString connectionString = new ConnectionString("mongodb://host.docker.internal:27017/cafe");
+            ConnectionString connectionString = new ConnectionString(mongoHost + mongoDatabase);
             MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
                     .applyConnectionString(connectionString)
                     .build();
@@ -36,7 +43,7 @@ public class MongoDBConfig {
     public MongoTemplate mongoTemplate(){
         MongoTemplate mongoTemplate = null;
         try {
-            mongoTemplate = new MongoTemplate(mongoClient(), "cafe");
+            mongoTemplate = new MongoTemplate(mongoClient(), mongoDatabase);
         }
         catch (Exception ex){
             ex.printStackTrace();

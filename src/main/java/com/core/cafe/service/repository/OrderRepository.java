@@ -2,6 +2,7 @@ package com.core.cafe.service.repository;
 
 import com.core.cafe.service.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -16,7 +17,9 @@ import java.util.List;
 public class OrderRepository {
 
 
-    private static final String ORDER_COLLECTION = "orders";
+
+    @Value("${cafe.orders.mongo.collection}")
+    private String orderCollection;
 
     private static final List<String> orderStatusList = Arrays.asList("COMPLETED","CANCELLED");
 
@@ -28,7 +31,7 @@ public class OrderRepository {
     public Order saveOrder(Order order){
         Order savedOrder = null;
         if(order != null){
-            savedOrder = mongoTemplate.save(order,ORDER_COLLECTION);
+            savedOrder = mongoTemplate.save(order,orderCollection);
         }
         return savedOrder;
     }
@@ -37,7 +40,7 @@ public class OrderRepository {
     public Order updateOrderStatus(String orderId,String status){
         Order updatedOrder = null;
         if(!StringUtils.isEmpty(orderId) && !StringUtils.isEmpty(status)){
-            Order orderToBeUpdated = mongoTemplate.findById(orderId,Order.class,ORDER_COLLECTION);
+            Order orderToBeUpdated = mongoTemplate.findById(orderId,Order.class,orderCollection);
             if(orderToBeUpdated != null && !orderStatusList.contains(orderToBeUpdated.getOrderStatus())){
                 orderToBeUpdated.setOrderStatus(status);
                 orderToBeUpdated.setEpoch(System.currentTimeMillis());
@@ -53,14 +56,14 @@ public class OrderRepository {
             Query query = new Query();
             query.addCriteria(Criteria.where("customerId").is(customerId));
             query.addCriteria(Criteria.where("orderStatus").is("INPROGRESS"));
-            orders = mongoTemplate.find(query,Order.class,ORDER_COLLECTION);
+            orders = mongoTemplate.find(query,Order.class,orderCollection);
         }
 
         return orders;
     }
 
     public List<Order> findAllOrders(){
-        return mongoTemplate.findAll(Order.class,ORDER_COLLECTION);
+        return mongoTemplate.findAll(Order.class,orderCollection);
     }
 
 
